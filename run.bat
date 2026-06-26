@@ -1,4 +1,4 @@
 @echo off
 echo A iniciar o conversor 
-py app/main.py
+.venv\Scripts\python.exe app/main.py
 pause
