@@ -1,2 +1,2 @@
-from converter import converter
-converter()
+from scanner import validate_scan
+validate_scan()
