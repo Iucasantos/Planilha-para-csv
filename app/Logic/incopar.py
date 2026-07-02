@@ -8,17 +8,17 @@ if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
 from scanner import incopar_scan
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 1000)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 1000)
 
 
 p,pfp = incopar_scan()
 
-pfp_planos=pfp.iloc[0,1:6]
+pfp_planos=pfp.iloc[0,1:6].copy()
 pfp_normal = pfp.iloc[1:11,0:6].copy()
 
-nomes=pfp.columns[1:6]
-colunas=pfp.iloc[0,1:6]
+nomes=pfp.columns[1:6].copy()
+colunas=pfp.iloc[0,1:6].copy()
 
 principal_incopar= pd.DataFrame({
     "Codigo_Plano":nomes,
@@ -40,7 +40,6 @@ def trimming(linha):
             Tipo_Cobertura = "" 
     
     elif "Nosso Médico" in texto:
-
         plano = "Nosso Médico"
         local = texto.replace("Nosso Médico","").strip()
         if "Ambulatorial" in texto:
@@ -48,10 +47,6 @@ def trimming(linha):
             local = local.replace("Ambulatorial","").strip()
         else:
             Tipo_Cobertura = "" 
-
-    else:
-        plano = None
-        local = texto
 
     convert = {
         "Enf.":"Enfermaria",
@@ -72,7 +67,7 @@ resultado = resultado.rename(columns={
 
 resultado["Codigo_Plano"] = principal_incopar["Codigo_Plano"]
 
-principal_incopar = pd.merge(principal_incopar, resultado, on='Codigo_Plano', how='left')
+principal_incopar = pd.merge(principal_incopar, resultado, on="Codigo_Plano", how="left")
 
 principal_incopar["Operadora"] = "Hapvida%"
 principal_incopar["Porcentagem_Promocao"] = "15%"
@@ -139,7 +134,7 @@ tabela_b_longa["Codigo_Plano"] = tabela_b_longa["Codigo_Plano"].astype(str)
 tabela_incopar = pd.merge(
     principal_incopar[["Id", "Codigo_Plano"]],tabela_b_longa,on="Codigo_Plano",how="inner")
 
-tabela_incopar[['Idade_Min', 'Idade_Max']] = tabela_incopar['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
-tabela_incopar.loc[tabela_incopar['Idade_Max'] == '', 'Idade_Max'] = '120'
+tabela_incopar[["Idade_Min", "Idade_Max"]] = tabela_incopar["Faixa_Etaria"].str.extract(r"(\d+)\D*(\d*)")
+tabela_incopar.loc[tabela_incopar["Idade_Max"] == "", "Idade_Max"] = "120"
 
 tabela_incopar = tabela_incopar[["Id", "Idade_Min", "Idade_Max", "Valor"]]

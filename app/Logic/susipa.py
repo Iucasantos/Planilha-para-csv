@@ -7,17 +7,17 @@ if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
 from scanner import susipa_scan
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 1000)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 1000)
 
 p,pfp = susipa_scan()
 
 faixa = pfp.iloc[1:11,0].copy()
-pfp_planos=pfp.iloc[0,2:6]
+pfp_planos=pfp.iloc[0,2:6].copy()
 pfp_normal = pfp.iloc[1:11,2:6].copy()
 
-nomes=pfp.columns[2:6]
-colunas=pfp.iloc[0,2:6]
+nomes=pfp.columns[2:6].copy()
+colunas=pfp.iloc[0,2:6].copy()
 
 principal_susipa= pd.DataFrame({
     "Codigo_Plano":nomes,
@@ -83,7 +83,7 @@ resultado = resultado.rename(columns={
 
 resultado["Codigo_Plano"] = principal_susipa["Codigo_Plano"]
 
-principal_susipa = pd.merge(principal_susipa, resultado, on='Codigo_Plano', how='left')
+principal_susipa = pd.merge(principal_susipa, resultado, on="Codigo_Plano", how="left")
 
 principal_susipa["Operadora"] = "Hapvida%"
 principal_susipa["Porcentagem_Promocao"] = "15%"
@@ -149,6 +149,6 @@ tabela_b_longa["Codigo_Plano"] = tabela_b_longa["Codigo_Plano"].astype(str)
 tabela_susipa = pd.merge(
     principal_susipa[["Id", "Codigo_Plano"]],tabela_b_longa,on="Codigo_Plano",how="inner")
 
-tabela_susipa[['Idade_Min', 'Idade_Max']] = tabela_susipa['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
-tabela_susipa.loc[tabela_susipa['Idade_Max'] == '', 'Idade_Max'] = '120'
+tabela_susipa[["Idade_Min", "Idade_Max"]] = tabela_susipa["Faixa_Etaria"].str.extract(r"(\d+)\D*(\d*)")
+tabela_susipa.loc[tabela_susipa["Idade_Max"] == "", "Idade_Max"] = "120"
 tabela_susipa = tabela_susipa[["Id", "Idade_Min", "Idade_Max", "Valor"]]

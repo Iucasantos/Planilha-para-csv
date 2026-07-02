@@ -7,17 +7,17 @@ if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
 from scanner import incoto_scan
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 1000)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 1000)
 
 
 p,pfp = incoto_scan()
 
-pfp_planos=pfp.iloc[0,1:6]
+pfp_planos=pfp.iloc[0,1:6].copy()
 pfp_normal = pfp.iloc[1:11,0:6].copy()
 
-nomes=pfp.columns[1:6]
-colunas=pfp.iloc[0,1:6]
+nomes=pfp.columns[1:6].copy()
+colunas=pfp.iloc[0,1:6].copy()
 
 principal_incoto= pd.DataFrame({
     "Codigo_Plano":nomes,
@@ -39,7 +39,6 @@ def trimming(linha):
             Tipo_Cobertura = "" 
     
     elif "Nosso Médico" in texto:
-
         plano = "Nosso Médico"
         local = texto.replace("Nosso Médico","").strip()
         if "Ambulatorial" in texto:
@@ -47,10 +46,6 @@ def trimming(linha):
             local = local.replace("Ambulatorial","").strip()
         else:
             Tipo_Cobertura = "" 
-
-    else:
-        plano = None
-        local = texto
 
     convert = {
         "Enf.":"Enfermaria",
@@ -71,7 +66,7 @@ resultado = resultado.rename(columns={
 
 resultado["Codigo_Plano"] = principal_incoto["Codigo_Plano"]
 
-principal_incoto = pd.merge(principal_incoto, resultado, on='Codigo_Plano', how='left')
+principal_incoto = pd.merge(principal_incoto, resultado, on="Codigo_Plano", how="left")
 
 principal_incoto["Operadora"] = f"Hapvida%"
 principal_incoto["Porcentagem_Promocao"] = f"15%"
@@ -138,7 +133,7 @@ tabela_merge["Codigo_Plano"] = tabela_merge["Codigo_Plano"].astype(str)
 tabela_incoto = pd.merge(
     principal_incoto[["Id", "Codigo_Plano"]],tabela_merge,on="Codigo_Plano",how="inner")
 
-tabela_incoto[['Idade_Min', 'Idade_Max']] = tabela_incoto['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
-tabela_incoto.loc[tabela_incoto['Idade_Max'] == '', 'Idade_Max'] = '120'
+tabela_incoto[["Idade_Min", "Idade_Max"]] = tabela_incoto["Faixa_Etaria"].str.extract(r"(\d+)\D*(\d*)")
+tabela_incoto.loc[tabela_incoto["Idade_Max"] == "", "Idade_Max"] = "120"
 tabela_incoto = tabela_incoto[["Id", "Idade_Min", "Idade_Max", "Valor"]]
 tabela_incoto = tabela_incoto[["Id", "Idade_Min", "Idade_Max", "Valor"]]
