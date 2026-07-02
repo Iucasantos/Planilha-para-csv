@@ -68,7 +68,7 @@ resultado["Codigo_Plano"] = principal_incoto["Codigo_Plano"]
 
 principal_incoto = pd.merge(principal_incoto, resultado, on="Codigo_Plano", how="left")
 
-principal_incoto["Operadora"] = f"Hapvida%"
+principal_incoto["Operadora"] = f"Hapvida"
 principal_incoto["Porcentagem_Promocao"] = f"15%"
 principal_incoto["Descricao_Promocao"] = f"15% de desconto nas 3 primeiras mensalidades"
 principal_incoto["Promocao_Ativa"] = True
