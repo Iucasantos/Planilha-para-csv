@@ -13,11 +13,11 @@ pd.set_option("display.width", 1000)
 
 p,pfp = incoto_scan()
 
-pfp_planos=pfp.iloc[0,1:6]
+pfp_planos=pfp.iloc[0,1:6].copy()
 pfp_normal = pfp.iloc[1:11,0:6].copy()
 
-nomes=pfp.columns[1:6]
-colunas=pfp.iloc[0,1:6]
+nomes=pfp.columns[1:6].copy()
+colunas=pfp.iloc[0,1:6].copy()
 
 principal_incoto= pd.DataFrame({
     "Codigo_Plano":nomes,

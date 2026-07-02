@@ -13,12 +13,12 @@ pd.set_option("display.width", 1000)
 p,pfp = susito_scan()
 
 faixa = pfp.iloc[1:11,0].copy()
-pfp_planos=pfp.iloc[0,1:5]
+pfp_planos=pfp.iloc[0,1:5].copy()
 pfp_normal = pfp.iloc[1:11,1:5].copy()
 
 
-nomes=pfp.columns[1:5]
-colunas=pfp.iloc[0,1:5]
+nomes=pfp.columns[1:5].copy()
+colunas=pfp.iloc[0,1:5].copy()
 
 principal_susito= pd.DataFrame({
     "Codigo_Plano":nomes,
@@ -134,7 +134,6 @@ principal_susito = principal_susito[[
     "Porcentagem_Promocao", 
     "Descricao_Promocao"
 ]]
-print(principal_susito)
 # #&=======================================================================================================================================
 pfp_normal.insert(0, "Faixa_Etaria", faixa.values)
 pfp_normal.columns = ["Faixa_Etaria"] + list(principal_susito["Codigo_Plano"].unique())

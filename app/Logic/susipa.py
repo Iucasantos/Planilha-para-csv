@@ -13,11 +13,11 @@ pd.set_option("display.width", 1000)
 p,pfp = susipa_scan()
 
 faixa = pfp.iloc[1:11,0].copy()
-pfp_planos=pfp.iloc[0,2:6]
+pfp_planos=pfp.iloc[0,2:6].copy()
 pfp_normal = pfp.iloc[1:11,2:6].copy()
 
-nomes=pfp.columns[2:6]
-colunas=pfp.iloc[0,2:6]
+nomes=pfp.columns[2:6].copy()
+colunas=pfp.iloc[0,2:6].copy()
 
 principal_susipa= pd.DataFrame({
     "Codigo_Plano":nomes,
