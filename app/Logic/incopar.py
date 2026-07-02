@@ -1,17 +1,18 @@
 import os
+import re
 import uuid
 import sys
 import pandas as pd
 pasta_raiz = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
-from scanner import validate_scan
+from scanner import incopar_scan
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 
 
-p,pfp = validate_scan()
+p,pfp = incopar_scan()
 
 pfp_planos=pfp.iloc[0,1:6]
 pfp_normal = pfp.iloc[1:11,0:6].copy()
@@ -19,11 +20,11 @@ pfp_normal = pfp.iloc[1:11,0:6].copy()
 nomes=pfp.columns[1:6]
 colunas=pfp.iloc[0,1:6]
 
-principal= pd.DataFrame({
+principal_incopar= pd.DataFrame({
     "Codigo_Plano":nomes,
     "Nome": colunas 
 })
-principal = principal.reset_index(drop=True)
+principal_incopar = principal_incopar.reset_index(drop=True)
 
 def trimming(linha):
     texto = str(linha["Nome"]).strip()
@@ -62,45 +63,45 @@ def trimming(linha):
 
     return pd.Series([plano,atendimento,Tipo_Cobertura])
 
-resultado = principal.apply(trimming,axis=1)
+resultado = principal_incopar.apply(trimming,axis=1)
 resultado = resultado.rename(columns={
     0: "Plano",
     1: "Acomodacao",
     2: "Tipo_Cobertura"
 })
 
-resultado["Codigo_Plano"] = principal["Codigo_Plano"]
+resultado["Codigo_Plano"] = principal_incopar["Codigo_Plano"]
 
-principal = pd.merge(principal, resultado, on='Codigo_Plano', how='left')
+principal_incopar = pd.merge(principal_incopar, resultado, on='Codigo_Plano', how='left')
 
-principal["Operadora"] = f"Hapvida%"
-principal["Porcentagem_Promocao"] = f"15%"
-principal["Descricao_Promocao"] = f"15% de desconto nas 3 primeiras mensalidades"
-principal["Promocao_Ativa"] = True
-principal["Ativo"] = True
-principal["Coparticipacao"] = f"Total"
-principal["Cobertura"] = f"Municipal"
-principal["Observacao"] = ""
-principal["Tipo_Contratacao"] = f"Individual/Familiar"
-principal["Id"] = [str(uuid.uuid4()) for _ in range(len(principal))]
-principal["Descricao_Plano"] = ""
+principal_incopar["Operadora"] = "Hapvida%"
+principal_incopar["Porcentagem_Promocao"] = "15%"
+principal_incopar["Descricao_Promocao"] = "15% de desconto nas 3 primeiras mensalidades"
+principal_incopar["Promocao_Ativa"] = True
+principal_incopar["Ativo"] = True
+principal_incopar["Coparticipacao"] = "Parcial"
+principal_incopar["Cobertura"] = "Municipal"
+principal_incopar["Observacao"] = ""
+principal_incopar["Id"] = [str(uuid.uuid4()) for _ in range(len(principal_incopar))]
+principal_incopar["Descricao_Plano"] = ""
 
-principal["Codigo_Plano"] = principal["Codigo_Plano"].astype(str)
+principal_incopar["Codigo_Plano"] = principal_incopar["Codigo_Plano"].astype(str)
 p["Codigo_Plano"] = p["Codigo_Plano"].astype(str)
 
-colunas_p = ["Codigo_Plano", "Tipo_Rede", "Tipo_Rede_Nacional", "Registro_ANS", "Min_Beneficiarios", "Max_Beneficiarios"]
+colunas_p = ["Codigo_Plano", "Tipo_Rede", "Tipo_Contratacao", "Tipo_Rede_Nacional", "Registro_ANS", "Min_Beneficiarios", "Max_Beneficiarios"]
 p_filtrada = p[colunas_p].drop_duplicates(subset=["Codigo_Plano"], keep="first")
-principal = principal.merge(p_filtrada, on="Codigo_Plano", how="left")
-nao_existe = principal["Registro_ANS"].isna()
+principal_incopar = principal_incopar.merge(p_filtrada, on="Codigo_Plano", how="left")
+nao_existe = principal_incopar["Registro_ANS"].isna()
 
-principal.loc[nao_existe, "Tipo_Cobertura"] = "Ambulatorial + Hospitalar com Obstetrícia"
-principal.loc[nao_existe, "Min_Beneficiarios"] = 1
-principal = principal.fillna("")
+principal_incopar.loc[nao_existe, "Tipo_Cobertura"] = "Ambulatorial + Hospitalar com Obstetrícia"
+principal_incopar.loc[nao_existe, "Min_Beneficiarios"] = 1
+principal_incopar = principal_incopar.fillna("")
+principal_incopar["Tipo_Contratacao"] = "PME"
 
 limpar_int = lambda val: str(int(float(val))) if (val != "" and pd.notna(val)) else ""
-principal["Min_Beneficiarios"] = principal["Min_Beneficiarios"].apply(limpar_int)
-principal["Max_Beneficiarios"] = principal["Max_Beneficiarios"].apply(limpar_int)
-principal = principal[[
+principal_incopar["Min_Beneficiarios"] = principal_incopar["Min_Beneficiarios"].apply(limpar_int)
+principal_incopar["Max_Beneficiarios"] = principal_incopar["Max_Beneficiarios"].apply(limpar_int)
+principal_incopar = principal_incopar[[
     "Id",
     "Operadora", 
     "Nome", 
@@ -123,9 +124,8 @@ principal = principal[[
     "Descricao_Promocao"
 ]]
 
-print(principal)
 #&=======================================================================================================================================
-pfp_normal.columns = ["Faixa_Etaria"] + list(principal["Codigo_Plano"].unique())
+pfp_normal.columns = ["Faixa_Etaria"] + list(principal_incopar["Codigo_Plano"].unique())
 
 tabela_b_longa = pd.melt(
     pfp_normal, 
@@ -136,11 +136,10 @@ tabela_b_longa = pd.melt(
 
 tabela_b_longa["Codigo_Plano"] = tabela_b_longa["Codigo_Plano"].astype(str)
 
-tabela_c = pd.merge(
-    principal[["Id", "Codigo_Plano"]],tabela_b_longa,on="Codigo_Plano",how="inner")
+tabela_incopar = pd.merge(
+    principal_incopar[["Id", "Codigo_Plano"]],tabela_b_longa,on="Codigo_Plano",how="inner")
 
-tabela_c[['Idade_Min', 'Idade_Max']] = tabela_c['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
-tabela_c.loc[tabela_c['Idade_Max'] == '', 'Idade_Max'] = '120'
-tabela_c = tabela_c[["Id", "Idade_Min", "Idade_Max", "Valor"]]
+tabela_incopar[['Idade_Min', 'Idade_Max']] = tabela_incopar['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
+tabela_incopar.loc[tabela_incopar['Idade_Max'] == '', 'Idade_Max'] = '120'
 
-print(tabela_c)
+tabela_incopar = tabela_incopar[["Id", "Idade_Min", "Idade_Max", "Valor"]]

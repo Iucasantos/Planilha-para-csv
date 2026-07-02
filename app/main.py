@@ -1,2 +1,2 @@
-from scanner import validate_scan
-validate_scan()
+from converter import criar_csv,principal,tabela
+criar_csv(principal,tabela)
