@@ -8,14 +8,19 @@ PLANOS = os.getenv("P")
 PLANOS_FAIXAS_PRECO = os.getenv("PFP")
 
 #&===================|incoto|======================
-def validate_scan():
+def incoto_scan():
     p = pd.read_excel(f"Dados/{PLANOS}")
     pfp = pd.read_excel(f"Dados/{PLANOS_FAIXAS_PRECO}")
     return p, pfp
-
 #&===================|incopar|======================
-def validate_scan():
+def incopar_scan():
     p = pd.read_excel(f"Dados/{PLANOS}")
     pfp = pd.read_excel(f"Dados/{PLANOS_FAIXAS_PRECO}", sheet_name=1)
     return p, pfp
-#&===================|incopar|======================
+#&===================|susipa|======================
+def susipa_scan():
+    p = pd.read_excel(f"Dados/{PLANOS}")
+    pfp = pd.read_excel(f"Dados/{PLANOS_FAIXAS_PRECO}", sheet_name=3)
+    return p, pfp
+
+    
