@@ -112,7 +112,7 @@ principal_susito = principal_susito.fillna("")
 limpar_int = lambda val: str(int(float(val))) if (val != "" and pd.notna(val)) else ""
 principal_susito["Min_Beneficiarios"] = principal_susito["Min_Beneficiarios"].apply(limpar_int)
 principal_susito["Max_Beneficiarios"] = principal_susito["Max_Beneficiarios"].apply(limpar_int)
-def principal_incopar(principal_susito):
+def principal_susito(principal_susito):
     return principal_susito[[
     "Id",
     "Operadora", 
@@ -153,5 +153,5 @@ tabela_susito = pd.merge(
 
 tabela_susito[['Idade_Min', 'Idade_Max']] = tabela_susito['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
 tabela_susito.loc[tabela_susito['Idade_Max'] == '', 'Idade_Max'] = '120'
-def tabela_susito();
+def tabela_susito():
     return tabela_susito[["Id", "Idade_Min", "Idade_Max", "Valor"]]
