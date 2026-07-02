@@ -5,13 +5,13 @@ import pandas as pd
 pasta_raiz = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
-from scanner import validate_scan
+from scanner import incopar_scan
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 
 
-p,pfp = validate_scan()
+p,pfp = incopar_scan()
 
 pfp_planos=pfp.iloc[0,1:6]
 pfp_normal = pfp.iloc[1:11,0:6].copy()
@@ -73,22 +73,21 @@ resultado["Codigo_Plano"] = principal["Codigo_Plano"]
 
 principal = pd.merge(principal, resultado, on='Codigo_Plano', how='left')
 
-principal["Operadora"] = f"Hapvida%"
-principal["Porcentagem_Promocao"] = f"15%"
-principal["Descricao_Promocao"] = f"15% de desconto nas 3 primeiras mensalidades"
+principal["Operadora"] = "Hapvida%"
+principal["Porcentagem_Promocao"] = "15%"
+principal["Descricao_Promocao"] = "15% de desconto nas 3 primeiras mensalidades"
 principal["Promocao_Ativa"] = True
 principal["Ativo"] = True
-principal["Coparticipacao"] = f"Total"
-principal["Cobertura"] = f"Municipal"
+principal["Coparticipacao"] = "Parcial"
+principal["Cobertura"] = "Municipal"
 principal["Observacao"] = ""
-principal["Tipo_Contratacao"] = f"Individual/Familiar"
 principal["Id"] = [str(uuid.uuid4()) for _ in range(len(principal))]
 principal["Descricao_Plano"] = ""
 
 principal["Codigo_Plano"] = principal["Codigo_Plano"].astype(str)
 p["Codigo_Plano"] = p["Codigo_Plano"].astype(str)
 
-colunas_p = ["Codigo_Plano", "Tipo_Rede", "Tipo_Rede_Nacional", "Registro_ANS", "Min_Beneficiarios", "Max_Beneficiarios"]
+colunas_p = ["Codigo_Plano", "Tipo_Rede", "Tipo_Contratacao", "Tipo_Rede_Nacional", "Registro_ANS", "Min_Beneficiarios", "Max_Beneficiarios"]
 p_filtrada = p[colunas_p].drop_duplicates(subset=["Codigo_Plano"], keep="first")
 principal = principal.merge(p_filtrada, on="Codigo_Plano", how="left")
 nao_existe = principal["Registro_ANS"].isna()
@@ -96,6 +95,7 @@ nao_existe = principal["Registro_ANS"].isna()
 principal.loc[nao_existe, "Tipo_Cobertura"] = "Ambulatorial + Hospitalar com Obstetrícia"
 principal.loc[nao_existe, "Min_Beneficiarios"] = 1
 principal = principal.fillna("")
+principal["Tipo_Contratacao"] = "PME"
 
 limpar_int = lambda val: str(int(float(val))) if (val != "" and pd.notna(val)) else ""
 principal["Min_Beneficiarios"] = principal["Min_Beneficiarios"].apply(limpar_int)

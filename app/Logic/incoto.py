@@ -5,13 +5,13 @@ import pandas as pd
 pasta_raiz = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
-from scanner import validate_scan
+from scanner import incoto_scan
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 
 
-p,pfp = validate_scan()
+p,pfp = incoto_scan()
 
 pfp_planos=pfp.iloc[0,1:6]
 pfp_normal = pfp.iloc[1:11,0:6].copy()
