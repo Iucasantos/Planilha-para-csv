@@ -15,7 +15,7 @@ p,pfp = susito_scan()
 faixa = pfp.iloc[1:11,0].copy()
 pfp_planos=pfp.iloc[0,1:5]
 pfp_normal = pfp.iloc[1:11,1:5].copy()
-print(pfp_planos)
+
 
 nomes=pfp.columns[1:5]
 colunas=pfp.iloc[0,1:5]
