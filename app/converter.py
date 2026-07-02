@@ -22,10 +22,12 @@ def criar_csv(principal,tabela):
     principal.to_csv(
         "Output/planos.csv",
         index=False,
+        header=False,
         encoding="utf-8-sig"
     )
     tabela.to_csv(
         "Output/planos_faixa_preco.csv",
         index=False,
+        header=False,
         encoding="utf-8-sig"
     )
