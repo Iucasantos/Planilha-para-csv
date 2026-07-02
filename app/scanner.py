@@ -22,5 +22,10 @@ def susipa_scan():
     p = pd.read_excel(f"Dados/{PLANOS}")
     pfp = pd.read_excel(f"Dados/{PLANOS_FAIXAS_PRECO}", sheet_name=3)
     return p, pfp
+#&===================|susito|======================
+def susito_scan():
+    p = pd.read_excel(f"Dados/{PLANOS}")
+    pfp = pd.read_excel(f"Dados/{PLANOS_FAIXAS_PRECO}", sheet_name=4)
+    return p, pfp
 
     
