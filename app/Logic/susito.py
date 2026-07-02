@@ -7,8 +7,8 @@ if pasta_raiz not in sys.path:
     sys.path.append(pasta_raiz)
 from scanner import susito_scan
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 1000)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 1000)
 
 p,pfp = susito_scan()
 
@@ -84,7 +84,7 @@ resultado = resultado.rename(columns={
 
 resultado["Codigo_Plano"] = principal_susito["Codigo_Plano"]
 
-principal_susito = pd.merge(principal_susito, resultado, on='Codigo_Plano', how='left')
+principal_susito = pd.merge(principal_susito, resultado, on="Codigo_Plano", how="left")
 
 principal_susito["Operadora"] = "Hapvida%"
 principal_susito["Porcentagem_Promocao"] = "15%"
@@ -134,7 +134,7 @@ principal_susito = principal_susito[[
     "Porcentagem_Promocao", 
     "Descricao_Promocao"
 ]]
-
+print(principal_susito)
 # #&=======================================================================================================================================
 pfp_normal.insert(0, "Faixa_Etaria", faixa.values)
 pfp_normal.columns = ["Faixa_Etaria"] + list(principal_susito["Codigo_Plano"].unique())
@@ -150,6 +150,6 @@ tabela_b_longa["Codigo_Plano"] = tabela_b_longa["Codigo_Plano"].astype(str)
 tabela_susito = pd.merge(
     principal_susito[["Id", "Codigo_Plano"]],tabela_b_longa,on="Codigo_Plano",how="inner")
 
-tabela_susito[['Idade_Min', 'Idade_Max']] = tabela_susito['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
-tabela_susito.loc[tabela_susito['Idade_Max'] == '', 'Idade_Max'] = '120'
+tabela_susito[["Idade_Min", "Idade_Max"]] = tabela_susito["Faixa_Etaria"].str.extract(r"(\d+)\D*(\d*)")
+tabela_susito.loc[tabela_susito["Idade_Max"] == "", "Idade_Max"] = "120"
 tabela_susito = tabela_susito[["Id", "Idade_Min", "Idade_Max", "Valor"]]
