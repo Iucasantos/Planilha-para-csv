@@ -100,8 +100,7 @@ principal_incoto = principal_incoto.fillna("")
 limpar_int = lambda val: str(int(float(val))) if (val != "" and pd.notna(val)) else ""
 principal_incoto["Min_Beneficiarios"] = principal_incoto["Min_Beneficiarios"].apply(limpar_int)
 principal_incoto["Max_Beneficiarios"] = principal_incoto["Max_Beneficiarios"].apply(limpar_int)
-def principal_incoto(principal_incoto):
-    return principal_incoto[[
+principal_incoto = principal_incoto[[
     "Id",
     "Operadora", 
     "Nome", 
@@ -124,7 +123,6 @@ def principal_incoto(principal_incoto):
     "Descricao_Promocao"
 ]]
 
-print(principal_incoto)
 #&=======================================================================================================================================
 pfp_normal.columns = ["Faixa_Etaria"] + list(principal_incoto["Codigo_Plano"].unique())
 
@@ -143,5 +141,4 @@ tabela_incoto = pd.merge(
 tabela_incoto[['Idade_Min', 'Idade_Max']] = tabela_incoto['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
 tabela_incoto.loc[tabela_incoto['Idade_Max'] == '', 'Idade_Max'] = '120'
 tabela_incoto = tabela_incoto[["Id", "Idade_Min", "Idade_Max", "Valor"]]
-def tabela_incoto():
-    return tabela_incoto[["Id", "Idade_Min", "Idade_Max", "Valor"]]
+tabela_incoto = tabela_incoto[["Id", "Idade_Min", "Idade_Max", "Valor"]]

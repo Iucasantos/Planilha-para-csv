@@ -111,8 +111,7 @@ principal_susipa = principal_susipa.fillna("")
 limpar_int = lambda val: str(int(float(val))) if (val != "" and pd.notna(val)) else ""
 principal_susipa["Min_Beneficiarios"] = principal_susipa["Min_Beneficiarios"].apply(limpar_int)
 principal_susipa["Max_Beneficiarios"] = principal_susipa["Max_Beneficiarios"].apply(limpar_int)
-def principal_susipa(principal_susipa):
-    return principal_susipa[[
+principal_susipa = principal_susipa[[
     "Id",
     "Operadora", 
     "Nome", 
@@ -135,7 +134,6 @@ def principal_susipa(principal_susipa):
     "Descricao_Promocao"
 ]]
 
-print(principal_susipa)
 # #&=======================================================================================================================================
 pfp_normal.insert(0, "Faixa_Etaria", faixa.values)
 pfp_normal.columns = ["Faixa_Etaria"] + list(principal_susipa["Codigo_Plano"].unique())
@@ -153,5 +151,4 @@ tabela_susipa = pd.merge(
 
 tabela_susipa[['Idade_Min', 'Idade_Max']] = tabela_susipa['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
 tabela_susipa.loc[tabela_susipa['Idade_Max'] == '', 'Idade_Max'] = '120'
-def tabela_susipa():
-    return tabela_susipa[["Id", "Idade_Min", "Idade_Max", "Valor"]]
+tabela_susipa = tabela_susipa[["Id", "Idade_Min", "Idade_Max", "Valor"]]

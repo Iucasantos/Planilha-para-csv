@@ -101,8 +101,7 @@ principal_incopar["Tipo_Contratacao"] = "PME"
 limpar_int = lambda val: str(int(float(val))) if (val != "" and pd.notna(val)) else ""
 principal_incopar["Min_Beneficiarios"] = principal_incopar["Min_Beneficiarios"].apply(limpar_int)
 principal_incopar["Max_Beneficiarios"] = principal_incopar["Max_Beneficiarios"].apply(limpar_int)
-def principal_incopar(principal_incopar):
-    return principal_incopar[[
+principal_incopar = principal_incopar[[
     "Id",
     "Operadora", 
     "Nome", 
@@ -125,7 +124,6 @@ def principal_incopar(principal_incopar):
     "Descricao_Promocao"
 ]]
 
-print(principal_incopar)
 #&=======================================================================================================================================
 pfp_normal.columns = ["Faixa_Etaria"] + list(principal_incopar["Codigo_Plano"].unique())
 
@@ -143,5 +141,5 @@ tabela_incopar = pd.merge(
 
 tabela_incopar[['Idade_Min', 'Idade_Max']] = tabela_incopar['Faixa_Etaria'].str.extract(r'(\d+)\D*(\d*)')
 tabela_incopar.loc[tabela_incopar['Idade_Max'] == '', 'Idade_Max'] = '120'
-def tabela_incopar():
-    return tabela_incopar[["Id", "Idade_Min", "Idade_Max", "Valor"]]
+
+tabela_incopar = tabela_incopar[["Id", "Idade_Min", "Idade_Max", "Valor"]]
