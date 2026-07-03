@@ -85,7 +85,7 @@ resultado["Codigo_Plano"] = principal_susipa["Codigo_Plano"]
 
 principal_susipa = pd.merge(principal_susipa, resultado, on="Codigo_Plano", how="left")
 
-principal_susipa["Operadora"] = "Hapvida%"
+principal_susipa["Operadora"] = "Hapvida"
 principal_susipa["Porcentagem_Promocao"] = "15%"
 principal_susipa["Descricao_Promocao"] = "15% de desconto nas 3 primeiras mensalidades"
 principal_susipa["Promocao_Ativa"] = True
